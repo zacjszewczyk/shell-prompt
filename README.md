@@ -1,46 +1,68 @@
-# Project title
+# Shell Prompt
 
-**Required.** Brief overview of the project, ideally one sentence.
+The purpose of this repository is to share my custom shell prompt. I also posted a brief writeup on my blog: [*ChatGPT Wrote my Shell Prompt*](https://zacs.site/blog/chatgpt-shell-prompt.html)
 
 ## Table of Contents
-
-**Required.** This serves to make navigating through (potentially) long documents easier. No explanation is necessary in the final product; remove this line.
 
 * [**Description**](#description)
 * [**Dependencies**](#dependencies)
 * [**Installation**](#installation)
-* [**Usage**](#usage)
 * [**Project structure**](#project-structure)
 * [**Background and Motivation**](#background-and-motivation)
-* [**Contributing**](#contributing)
-* [**Contributors**](#contributors)
 * [**License**](#license)
 
 ## Description
 
-**Required.** A more detailed overview of the project, but not so detailed as to be confused with detailed documentation. This section may include a link to more in-depth resources, such as a white paper, article, or actual documentation.
+This script changes the shell prompt to conform to the following pattern:
+
+```
+{user}@{hostname}:{directory} [{local branch} {upstream branch} {branch tracking symbol}|{local status}]
+{privilege character} 
+```
+
+1. If the previous command succeeded, `{user}` and `{hostname}` would be green but the at symbol (@) would be left black to differentiate the current username from the current hostname; if the previous command failed, those portions of the prompt would be colored red to indidcate that something had gone wrong.
+1. The directory variable would be replaced by the current working directory with `$HOME` abbreviated with a tilde (~). `{directory}` would always be light blue to make it easy to know where I was at all times.
+2. The privilege character would be a dollar sign ($) when running as an unprivileged user, and an octothorp (#) when running with elevated privileges. Note that the privilege character would appear on the second line. Although not necessary in most scenarios, when the username and hostname got long and the prompt had to display a lot of information for a complex `git` repository, this helped keep everything readable.
+5. The variables in the square brackets, which present `git` information, would be determined according to a series of rules.
+
+If the current working directory was not a git repository, this entire block would be ommitted. This would help keep my prompt clean when navigating the filesystem and debugging applications.
+
+`{local branch}` would show the local branch if it existed. If there were unstaged changes in the local branch, the local branch would be colored orange. This visual cue would remind me to act on changes.
+
+`{upstream branch}` would show the remote tracking branch. I typically work with multiple remotes, and on multiple occasions I have accidentally pushed code to the wrong location. This helps mitigate those types of accidents.
+
+`{branch tracking symbol}` is determined by the following criteria (thanks [Martin Gondermann](https://github.com/magicmonty/bash-git-prompt):
+
+* ↑n: ahead of remote by n commits
+* ↓n: behind remote by n commits
+* ↓m↑n: branches diverged, other by m commits, yours by n commits
+* L: local branch, not remotely tracked
+
+`{local status}` is determined by the following criteria: 
+
+* ✔: repository clean
+* ●n: there are n staged files
+* ✖n: there are n files with merge conflicts
+* ✖-n: there are n staged files waiting for removal
+* ✚n: there are n changed but unstaged files
+* …n: there are n untracked files
+* ⚑n: there are n stash entries
 
 ## Dependencies
 
-**Optional.** Explanation of project dependencies, or a simple statement that the project has no dependencies if appropriate. Required for development projects; optional for all others.
+This project has no dependencies.
 
 ## Installation
 
-**Optional.** Installation instructions for the project. This may include as little as a ``git clone`` command, or as much as a multi-step process. Required for development projects; optional for all others.
-
-## Usage
-
-**Optional.** Usage instructions for the project. This should consist of code blocks illustrating common usage followed by brief explanations. A good rule of thumb is taking a new user from zero to functional with the project. Required for development projects; optional for all others.
+To use this custom shell prompt, download [custom_prompt.sh](./custom_prompt.sh) and append `source custom_prompt.sh` to your `.bash_profile` file. Next time you open a shell, `custom_prompt.sh` will automatically load.
 
 ## Project structure
-
-**Required.** High-level overview of the project’s structure. Use this section to obviate the need for new users to dig through folders to uncover critical files or components.
 
 ```
 ./repo
 |_ README.md # This file.
 |
-|_
+|_ custom_prompt.sh # Custom prompt shell script.
 |
 |_ makefile # Project makefile
 |_ LICENSE.md # Project license.
@@ -48,35 +70,8 @@
 
 ## Background and Motivation
 
-**Required.** Describe any background necessary to understand this project, as well as the motivator that prompted it.
-
-## Contributing
-
-**Optional.** Describe how to contribute to the project. This section should seek to lower the barrier to collaboration.
-
-Contributions are welcome from all, regardless of rank or position.
-
-There are no system requirements for contributing to this project. To contribute via the web:
-
-1. Click GitLab’s “Web IDE” button to open the online editor.
-2. Make your changes. **Note:** limit your changes to one part of one file per commit; for example, edit only the “Description” section here in the first commit, then the “Background and Motivation” section in a separate commit.
-3. Once finished, click the blue “Commit...” button.
-4. Write a detailed description of the changes you made in the “Commit Message” box.
-5. Select the “Create a new branch” radio button if you do not already have your own branch; otherwise, select your branch. The recommended naming convention for new branches is ``first.middle.last``.
-6. Click the green “Commit” button.
-
-You may also contribute to this project using your local machine by cloning this repository to your workstation, creating a new branch, commiting and pushing your changes, and creating a merge request.
-
-## Contributors
-
-**Optional.** Use this section to recognize contributors.
-
-This section lists project contributors. When you submit a merge request, remember to append your name to the bottom of the list below. You may also include a brief list of the sections to which you contributed.
-
-* **Creator:** 
+I have, for years now, wanted a cool shell prompt--something worth showing off on [r/linux](https://www.reddit.com/r/linux/) or even [r/unixporn](https://www.reddit.com/r/unixporn/). Not enough to dig into the weeds and figure out how to write one myself, but enough that it came up every once in a while. Then, the other day, I had a great idea: why not just let ChatGPT make it for me? This project is the result.
 
 ## License
-
-**Required**. This section should include a boilerplate summary of the license under which the project is published. For Information Defense company projects, this should be the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License; use the paragraph below:
 
 This project is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/). You can view the full text of the license in [LICENSE.md](./LICENSE.md). Read more about the license [at the original author’s website](https://zacs.site/disclaimers.html). Generally speaking, this license allows individuals to remix this work provided they release their adaptation under the same license and cite this project as the original, and prevents anyone from turning this work or its derivatives into a commercial product.
