@@ -31,7 +31,7 @@ If the current working directory was not a git repository, this entire block wou
 
 `{upstream branch}` would show the remote tracking branch. I typically work with multiple remotes, and on multiple occasions I have accidentally pushed code to the wrong location. This helps mitigate those types of accidents.
 
-`{branch tracking symbol}` is determined by the following criteria (thanks [Martin Gondermann](https://github.com/magicmonty/bash-git-prompt):
+`{branch tracking symbol}` is determined by the following criteria (thanks [Martin Gondermann](https://github.com/magicmonty/bash-git-prompt)):
 
 * ↑n: ahead of remote by n commits
 * ↓n: behind remote by n commits
